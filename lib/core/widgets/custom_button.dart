@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  String text;
-  VoidCallback click;
-  CustomButton({
-    Key? key,
+ final String text;
+  final VoidCallback click;
+  const CustomButton({
+    super.key,
     required this.text,
     required this.click,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
