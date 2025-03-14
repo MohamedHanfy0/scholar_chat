@@ -65,6 +65,7 @@ class _SigninViewState extends State<SigninView> {
                 ),
                 SizedBox(height: 15),
                 CustomTextField(
+                  obscureText: true,
                   text: 'Password',
                   onChanged: (passUser) {
                     pass = passUser;

@@ -67,6 +67,7 @@ class _LoginViewState extends State<LoginView> {
                 SizedBox(height: 15),
                 CustomTextField(
                   text: 'Password',
+                  obscureText: true,
                   onChanged: (valuePass) {
                     pass = valuePass;
                   },
