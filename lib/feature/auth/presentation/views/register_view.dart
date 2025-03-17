@@ -1,45 +1,42 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
 import 'package:scholar_chat/core/assets.dart';
 import 'package:scholar_chat/core/widgets/custom_button.dart';
 import 'package:scholar_chat/core/widgets/custom_text_field.dart';
-import 'package:scholar_chat/feature/auth/cubits/login_cubit/login_cubit.dart';
+import 'package:scholar_chat/feature/auth/cubits/register_cubit/register_cubit.dart';
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+class RegisterView extends StatelessWidget {
+  RegisterView({super.key});
+
+  bool isLoading = false;
+  GlobalKey<FormState> formKey = GlobalKey();
+  String? email;
+  String? pass;
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = false;
-    GlobalKey<FormState> formKey = GlobalKey();
-    String? email;
-    String? pass;
     return Scaffold(
-      body: BlocConsumer<LoginCubit, LoginState>(
+      body: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
-          if (state is LoginLoading) {
+          if (state is RegisterLoading) {
             isLoading = true;
-          } else if (state is LoginSuccess) {
-            context.replace('/chat');
-            isLoading = false;
-          } else if (state is LoginFailure) {
+          } else if (state is RegisterFailure) {
             isLoading = false;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.red,
-
                 content: Text(state.message),
               ),
             );
+          } else if (state is RegisterSuccess) {
+            isLoading = false;
+            context.replace('/chat');
           }
         },
         builder:
-            (context, stat) => ModalProgressHUD(
+            (context, state) => ModalProgressHUD(
               inAsyncCall: isLoading,
               child: Form(
                 key: formKey,
@@ -65,7 +62,7 @@ class LoginView extends StatelessWidget {
                         padding: EdgeInsets.only(top: 15, bottom: 25),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'LogIn',
+                          'Register',
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -75,48 +72,47 @@ class LoginView extends StatelessWidget {
                       ),
                       CustomTextField(
                         text: 'Email',
-                        onChanged: (valueEmail) {
-                          email = valueEmail;
+                        onChanged: (emailUser) {
+                          email = emailUser;
                         },
                       ),
                       SizedBox(height: 15),
                       CustomTextField(
-                        text: 'Password',
                         obscureText: true,
-                        onChanged: (valuePass) {
-                          pass = valuePass;
+                        text: 'Password',
+                        onChanged: (passUser) {
+                          pass = passUser;
                         },
                       ),
                       SizedBox(height: 15),
                       CustomButton(
-                        text: 'login',
+                        text: 'resister',
                         click: () async {
                           if (formKey.currentState!.validate()) {
-                            BlocProvider.of<LoginCubit>(
+                            BlocProvider.of<RegisterCubit>(
                               context,
-                            ).signInWithEmailAndPassword(
+                            ).createUserWithEmailAndPassword(
                               email: email!,
                               pass: pass!,
                             );
                           }
                         },
                       ),
-                      Container(
-                        // alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(vertical: 20),
 
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           spacing: 10,
                           children: [
-                            Text("Dont have an account"),
+                            Text("Alrady Have an account"),
 
                             InkWell(
                               onTap: () {
-                                context.go('/register');
+                                context.go('/login');
                               },
                               child: Text(
-                                "Register",
+                                "Login",
                                 style: TextStyle(color: Colors.orange),
                               ),
                             ),

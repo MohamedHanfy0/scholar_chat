@@ -30,6 +30,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         }
         return null;
       },
+      
       onChanged: widget.onChanged,
       decoration: InputDecoration(
         hintText: widget.text,
